@@ -96,7 +96,7 @@ function displayCard(books){
         //Date de publication
         const date =  clone.querySelector(".card-date");
         if (book.publishedDate.dt_txt) {
-            let dateFR = new Date((book.publishedDate.dt_txt));
+            let dateFR = new Date(book.publishedDate.dt_txt);
             date.textContent = "Date de publication : " + dateFR.toLocaleString("fr-FR");
         } else{
             date.textContent = "";
@@ -120,4 +120,8 @@ function displayCard(books){
         
         bookList.appendChild(clone);
     }
+}
+
+function FiltrerAuthors(authors) {
+    
 }
