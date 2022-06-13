@@ -11,6 +11,7 @@ function getBooks() {
     .then(function (data){
         pushAuthors(data);
         pushCategories(data);
+        displayCard(data);
     })
 
 }
@@ -71,10 +72,52 @@ function pushCategories(data){
 
 function displayCard(books){
     const template = document.querySelector("#template");
+    const bookList = document.querySelector('.books-list');
 
     for (const book of books) {
-        let clone = document.importNode(template.textContent, true);
+        const clone = document.importNode(template.content, true);
+
+        //Image
+        let img = clone.querySelector(".card-img-top");
+        if (book.thumbnailUrl) {
+            img.src = book.thumbnailUrl;
+        } else{
+            img.src = "https://p1.storage.canalblog.com/14/48/1145642/91330992_o.png";
+        }
+
+        //Titre
+        let title =  clone.querySelector(".card-title");
+        title.textContent = book.title;
+
+        //ISBN
+        let isbn =  clone.querySelector(".card-ISBN");
+        isbn.textContent = "ISBN : " + book.isbn;
+
+        //Date de publication
+        const date =  clone.querySelector(".card-date");
+        if (book.publishedDate.dt_txt) {
+            let dateFR = new Date((book.publishedDate.dt_txt));
+            date.textContent = "Date de publication : " + dateFR.toLocaleString("fr-FR");
+        } else{
+            date.textContent = "";
+        }
+
+        //Nombre de pages
+        const pages =  clone.querySelector(".card-pages");
+        if (book.pageCount && book.pageCount > 0) {
+            pages.textContent = "Nombres de pages : " + book.pageCount;
+        } else{
+            pages.textContent = "";
+        }
+
+        //Description
+        const description =  clone.querySelector(".card-description");
+        if (book.shortDescription) {
+            description.textContent = "Description : " + book.shortDescription;
+        } else{
+            description.textContent = "";
+        }
         
-    
+        bookList.appendChild(clone);
     }
 }
