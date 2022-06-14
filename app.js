@@ -3,11 +3,23 @@ const categorieSelect = document.querySelector('.categories');
 
 getBooks();
 
+authorSelect.addEventListener('change', e =>{
+    console.log(e.target.value)
+    filtrerAuthors(e.target.value)
+    categorieSelect.value = "Sélectionner une categorie";
+})
+
+categorieSelect.addEventListener('change', e =>{
+    console.log(e.target.value)
+    filtrerCategories(e.target.value)
+    authorSelect.value = "Sélectionner un auteur";
+})
+
 function getBooks() {
     fetch('./books.json')
     
     .then(response => response.json())
-        
+    
     .then(function (data){
         pushAuthors(data);
         pushCategories(data);
@@ -35,8 +47,8 @@ function pushAuthors(data){
     let authors = getAuthors(data);
     for (const author of authors) {
         const option = document.createElement("option");
+        option.value = author;
         option.textContent = author;
-
         authorSelect.appendChild(option);
         
     }
@@ -62,6 +74,7 @@ function pushCategories(data){
     let categories = getCategories(data);
     for (const categorie of categories) {
         const option = document.createElement("option");
+        option.value = categorie;
         option.textContent = categorie;
 
         categorieSelect.appendChild(option);
@@ -95,7 +108,7 @@ function displayCard(books){
 
         //Date de publication
         const date =  clone.querySelector(".card-date");
-        if (book.publishedDate.dt_txt) {
+        if (book.publishedDate) {
             let dateFR = new Date(book.publishedDate.dt_txt);
             date.textContent = "Date de publication : " + dateFR.toLocaleString("fr-FR");
         } else{
@@ -118,10 +131,48 @@ function displayCard(books){
             description.textContent = "";
         }
         
+        const card =  clone.querySelector(".card");
+        // Ajout d'un attribut data qui est égal à l'auteur de chaque livre
+        card.setAttribute("data-authors", book.authors.join());
+        // Ajout d'un attribut data qui est égal à la catégorie de chaque livre
+        card.setAttribute("data-categories", book.categories.join());
+
         bookList.appendChild(clone);
     }
 }
 
-function FiltrerAuthors(authors) {
-    
+function filtrerAuthors(value) {
+    const books = document.querySelector('.books-list').children
+    for (const book of books) {
+        if (value == "Sélectionner un auteur") {
+            book.style.display = 'block';
+        } else{
+            book.style.display = 'none';
+            const cardAuthor = book.getAttribute("data-authors");
+            let authors = cardAuthor.split(",");
+            console.log(authors.find(element => element == value));
+            if (authors.find(element => element == value)) {
+                book.style.display = 'block';
+        }
+        }
+    }
+}
+
+function filtrerCategories(value) {
+    const books = document.querySelector('.books-list').children
+    for (const book of books) {
+        if (value == "Sélectionner une categorie") {
+            book.style.display = 'block';
+        } else{
+            book.style.display = 'none';
+            const cardAuthor = book.getAttribute("data-categories");
+            let authors = cardAuthor.split(",");
+            console.log(authors.find(element => element == value));
+            if (authors.find(element => element == value)) {
+                book.style.display = 'block';
+            }
+        }
+    }
+
+
 }
