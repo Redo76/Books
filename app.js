@@ -173,6 +173,4 @@ function filtrerCategories(value) {
             }
         }
     }
-
-
 }
